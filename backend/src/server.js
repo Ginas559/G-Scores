@@ -1,9 +1,8 @@
-const express = require("express");
 const sequelize = require("./config/database");
 
 require("./models/Student");
 
-const app = express();
+const app = require("./app");
 
 sequelize
     .authenticate()
