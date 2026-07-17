@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
-import { Input, Button, Card, Row, Col } from "antd";
+import { Input, Button, Card, Row, Col, Table } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
 import { getReport } from "../api/reportApi";
 import { getTop10GroupA } from "../api/top10Api";
@@ -20,6 +20,44 @@ const HomePage = () => {
         dia_li: "Địa lý",
         gdcd: "Giáo dục công dân"
     };
+    const columns = [
+        {
+            title: "Xếp hạng",
+            key: "rank",
+
+            render: (text, record, index) => {
+
+                return index + 1;
+
+            }
+
+        },
+        {
+            title: "Số báo danh",
+            dataIndex: "sbd",
+            key: "sbd"
+        },
+        {
+            title: "Toán",
+            dataIndex: "toan",
+            key: "toan"
+        },
+        {
+            title: "Vật lý",
+            dataIndex: "vat_li",
+            key: "vat_li"
+        },
+        {
+            title: "Hóa học",
+            dataIndex: "hoa_hoc",
+            key: "hoa_hoc"
+        },
+        {
+            title: "Tổng điểm",
+            dataIndex: "tong_diem",
+            key: "tong_diem"
+        },
+    ];
     const findStudent = () => {
         getStudentBySbd(sbd)
             .then((response) => {
@@ -141,20 +179,12 @@ const HomePage = () => {
                         </Row>
                     }
                     <h2>Top 10 Khối A</h2>
-                    {
-                        top10.map((student) => {
-                            return (
-                                <div key={student.sbd}>
-                                    <p>SBD: {student.sbd}</p>
-                                    <p>Toán: {student.toan}</p>
-                                    <p>Vật lý: {student.vat_li}</p>
-                                    <p>Hóa học: {student.hoa_hoc}</p>
-                                    <p>Tổng điểm: {student.tong_diem}</p>
-                                </div>
-                            );
-
-                        })
-                    }
+                    <Table
+                        columns={columns}
+                        dataSource={top10}
+                        rowKey="sbd"
+                        pagination={false}
+                    />
                 </div>
             )}
         </div>
