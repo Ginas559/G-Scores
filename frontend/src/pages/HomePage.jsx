@@ -1,0 +1,34 @@
+import { useState } from "react";
+import { Input, Button } from "antd";
+import { getStudentBySbd } from "../api/studentApi";
+const HomePage = () => {
+    const [sbd, setSbd] = useState("");
+    const [student, setStudent] = useState(null);
+    const findStudent = () => {
+        getStudentBySbd(sbd)
+            .then((response) => {
+                console.log(response.data);
+                setStudent(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    return (
+        <div>
+            <h1>G-Scores</h1>
+            <Input
+                placeholder="Enter registration number"
+                value={sbd}
+                onChange={(e) => setSbd(e.target.value)}
+            />
+            <Button
+                type="primary"
+                onClick={findStudent}
+            >
+                Search
+            </Button>
+        </div>
+    );
+};
+export default HomePage;
