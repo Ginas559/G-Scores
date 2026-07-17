@@ -1,3 +1,4 @@
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 import { Input, Button, Card, Row, Col } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
@@ -77,6 +78,24 @@ const HomePage = () => {
                             {
                                 Object.keys(report).map((subject) => {
                                     console.log(report[subject]);
+                                    const chartData = [
+                                        {
+                                            level: "<4",
+                                            count: report[subject]["<4"]
+                                        },
+                                        {
+                                            level: "4-6",
+                                            count: report[subject]["4-6"]
+                                        },
+                                        {
+                                            level: "6-8",
+                                            count: report[subject]["6-8"]
+                                        },
+                                        {
+                                            level: ">=8",
+                                            count: report[subject][">=8"]
+                                        }
+                                    ];
                                     return (
                                         <Col
                                             key={subject}
@@ -85,10 +104,22 @@ const HomePage = () => {
                                             <Card
                                                 title={subjectNames[subject]}
                                             >
-                                                <p>{">=8"}: {report[subject][">=8"]}</p>
-                                                <p>6-8: {report[subject]["6-8"]}</p>
-                                                <p>4-6: {report[subject]["4-6"]}</p>
-                                                <p>{"<4"}: {report[subject]["<4"]}</p>
+                                                <ResponsiveContainer
+                                                    width="100%"
+                                                    height={250}
+                                                >
+                                                    <BarChart
+                                                        data={chartData}
+                                                    >
+                                                        <XAxis dataKey="level" />
+                                                        <YAxis />
+                                                        <Tooltip />
+                                                        <Bar
+                                                            dataKey="count"
+                                                            fill="#1677ff"
+                                                        />
+                                                    </BarChart>
+                                                </ResponsiveContainer>
                                             </Card>
                                         </Col>
                                     );
