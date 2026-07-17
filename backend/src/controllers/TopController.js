@@ -47,6 +47,17 @@ const getTop10GroupA = (req, res) => {
 
         },
 
+        order: [
+
+            [
+                sequelize.literal("tong_diem"),
+                "DESC",
+            ],
+
+        ],
+
+        limit: 10,
+
     })
 
         .then((students) => {
