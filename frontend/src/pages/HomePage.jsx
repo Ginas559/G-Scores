@@ -28,6 +28,21 @@ const HomePage = () => {
             >
                 Search
             </Button>
+            {student && (
+                <div>
+                    <p>Registration Number: {student.sbd}</p>
+                    <p>Math: {student.toan}</p>
+                    <p>Literature: {student.ngu_van}</p>
+                    <p>Foreign Language: {student.ngoai_ngu}</p>
+                    <p>Physics: {student.vat_li}</p>
+                    <p>Chemistry: {student.hoa_hoc}</p>
+                    <p>Biology: {student.sinh_hoc}</p>
+                    <p>History: {student.lich_su}</p>
+                    <p>Geography: {student.dia_li}</p>
+                    <p>Civic Education: {student.gdcd}</p>
+                    <p>Foreign Language Code: {student.ma_ngoai_ngu}</p>
+                </div>
+            )}
         </div>
     );
 };
