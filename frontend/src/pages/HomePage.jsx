@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { Input, Button, Card, Row, Col } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
 import { getReport } from "../api/reportApi";
+import { getTop10GroupA } from "../api/top10Api";
 const HomePage = () => {
     const [sbd, setSbd] = useState("");
     const [student, setStudent] = useState(null);
     const [report, setReport] = useState(null);
+    const [top10, setTop10] = useState([]);
     const subjectNames = {
         toan: "Toán",
         ngu_van: "Ngữ Văn",
@@ -38,8 +40,19 @@ const HomePage = () => {
                 console.log(err);
             });
     };
+    const fetchTop10 = () => {
+        getTop10GroupA()
+            .then((response) => {
+                console.log(response.data);
+                setTop10(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
     useEffect(() => {
         fetchReport();
+        fetchTop10();
     }, []);
     return (
         <div>
@@ -126,6 +139,21 @@ const HomePage = () => {
                                 })
                             }
                         </Row>
+                    }
+                    <h2>Top 10 Khối A</h2>
+                    {
+                        top10.map((student) => {
+                            return (
+                                <div key={student.sbd}>
+                                    <p>SBD: {student.sbd}</p>
+                                    <p>Toán: {student.toan}</p>
+                                    <p>Vật lý: {student.vat_li}</p>
+                                    <p>Hóa học: {student.hoa_hoc}</p>
+                                    <p>Tổng điểm: {student.tong_diem}</p>
+                                </div>
+                            );
+
+                        })
                     }
                 </div>
             )}
