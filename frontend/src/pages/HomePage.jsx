@@ -1,7 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 import { Input, Button, Card, Row, Col, Table, Descriptions } from "antd";
-import { Space } from "antd";
 import { message } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
 import { getReport } from "../api/reportApi";
@@ -129,27 +128,25 @@ const HomePage = () => {
         loadTop10();
     }, []);
     return (
-        <div style={{ padding: 24 }}>
+        <div className="home-page">
             <h1>{text.title}</h1>
-            <Space>
+
+            <div className="search-bar">
                 <Input
-                    style={{ width: 300 }}
+                    className="search-input"
                     placeholder={text.searchPlaceholder}
                     value={sbd}
                     onChange={(e) => setSbd(e.target.value)}
                     onPressEnter={findStudent}
                 />
-                <Button
-                    type="primary"
-                    onClick={findStudent}
-                >
+                <Button className="search-button" type="primary" onClick={findStudent}>
                     {text.searchButton}
                 </Button>
-            </Space>
-            <div style={{ marginTop: 24 }}></div>
+            </div>
+
             {student && (
-                <Card title={text.studentInfo}>
-                    <Descriptions bordered column={2}>
+                <Card className="student-card" title={text.studentInfo}>
+                    <Descriptions bordered column={{ xs: 1, sm: 1, md: 2 }}>
                         <Descriptions.Item label={text.registrationNumber}>
                             {student.sbd}
                         </Descriptions.Item>
@@ -162,7 +159,7 @@ const HomePage = () => {
                             {getScore(student.toan)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label={natural ? "Vật lý" : "Lịch sử"}>
+                        <Descriptions.Item label={natural ? text.physics : text.history}>
                             {getScore(natural ? student.vat_li : student.lich_su)}
                         </Descriptions.Item>
 
@@ -170,7 +167,7 @@ const HomePage = () => {
                             {getScore(student.ngu_van)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label={natural ? "Hóa học" : "Địa lý"}>
+                        <Descriptions.Item label={natural ? text.chemistry : text.geography}>
                             {getScore(natural ? student.hoa_hoc : student.dia_li)}
                         </Descriptions.Item>
 
@@ -178,7 +175,7 @@ const HomePage = () => {
                             {getScore(student.ngoai_ngu)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label={natural ? "Sinh học" : "GDCD"}>
+                        <Descriptions.Item label={natural ? text.biology : text.civicEducation}>
                             {getScore(natural ? student.sinh_hoc : student.gdcd)}
                         </Descriptions.Item>
 
@@ -189,76 +186,61 @@ const HomePage = () => {
                 </Card>
             )
             }
-            {
-                report && (
-                    <div>
-                        <h2>{text.scoreStatistics}</h2>
-                        {
-                            <Row gutter={[16, 16]}>
+            {report && (
+                <section className="home-section">
+                    <h2>{text.scoreStatistics}</h2>
+                    <Row gutter={[16, 16]} className="chart-grid">
+                        {Object.keys(report).map((subject) => {
+                            const chartData = [
                                 {
-                                    Object.keys(report).map((subject) => {
-                                        const chartData = [
-                                            {
-                                                level: "<4",
-                                                count: report[subject]["<4"]
-                                            },
-                                            {
-                                                level: "4-6",
-                                                count: report[subject]["4-6"]
-                                            },
-                                            {
-                                                level: "6-8",
-                                                count: report[subject]["6-8"]
-                                            },
-                                            {
-                                                level: ">=8",
-                                                count: report[subject][">=8"]
-                                            }
-                                        ];
-                                        return (
-                                            <Col
-                                                key={subject}
-                                                span={8}
-                                            >
-                                                <Card
-                                                    title={subjectName[subject]}
-                                                >
-                                                    <ResponsiveContainer
-                                                        width="100%"
-                                                        height={250}
-                                                    >
-                                                        <BarChart
-                                                            data={chartData}
-                                                        >
-                                                            <XAxis dataKey="level" />
-                                                            <YAxis />
-                                                            <Tooltip />
-                                                            <Bar
-                                                                dataKey="count"
-                                                                fill="#1677ff"
-                                                            />
-                                                        </BarChart>
-                                                    </ResponsiveContainer>
-                                                </Card>
-                                            </Col>
-                                        );
-                                    })
-                                }
-                            </Row>
-                        }
-                        <div style={{ marginTop: 24 }} />
-                        <Card title={text.topA}>
+                                    level: "<4",
+                                    count: report[subject]["<4"],
+                                },
+                                {
+                                    level: "4-6",
+                                    count: report[subject]["4-6"],
+                                },
+                                {
+                                    level: "6-8",
+                                    count: report[subject]["6-8"],
+                                },
+                                {
+                                    level: ">=8",
+                                    count: report[subject][">=8"],
+                                },
+                            ];
+
+                            return (
+                                <Col key={subject} xs={24} sm={24} md={12} xl={8}>
+                                    <Card className="stat-card" title={subjectName[subject]}>
+                                        <ResponsiveContainer width="100%" height={240}>
+                                            <BarChart data={chartData}>
+                                                <XAxis dataKey="level" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Bar dataKey="count" fill="#1677ff" />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </Card>
+                                </Col>
+                            );
+                        })}
+                    </Row>
+
+                    <Card className="ranking-card" title={text.topA}>
+                        <div className="table-wrap">
                             <Table
                                 columns={top10GrA}
                                 dataSource={top10}
                                 rowKey="sbd"
                                 pagination={false}
+                                scroll={{ x: 560 }}
                             />
-                        </Card>
-                    </div>
-                )
-            }
-        </div >
+                        </div>
+                    </Card>
+                </section>
+            )}
+        </div>
     );
 };
 export default HomePage;
