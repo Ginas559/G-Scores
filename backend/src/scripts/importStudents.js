@@ -49,6 +49,10 @@ fs.createReadStream(csvPath)
 
                 console.log("Database connected.");
 
+                await sequelize.sync();
+
+                console.log("Tables created.");
+
                 const batchSize = 1000;
 
                 for (let i = 0; i < students.length; i += batchSize) {
@@ -69,16 +73,17 @@ fs.createReadStream(csvPath)
                 console.log("Import completed.");
 
             })
+
+            .catch((err) => {
+
+                console.error(err);
+
+            })
+
             .finally(() => {
 
                 process.exit();
 
             });
-
-            .catch ((err) => {
-
-            console.log(err);
-
-        });
 
     });
