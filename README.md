@@ -66,6 +66,30 @@ g-scores
 *   npm
 
 ## How to Setup and Run
+You can run this project with **Docker** or **Manually**.
+### Option 1: Run with Docker (Recommended)
+**Prerequisites:** Open **Docker Desktop** first.
+1. **Clone project and go to the folder:**
+   ```bash
+   git clone https://github.com/Ginas559/G-Scores.git
+   cd G-Scores
+   ```
+2. **Setup Env Files (Important):**
+   Create `.env` files from `.env.example` before building.
+   * Go to `backend/` folder, copy `.env.example` to `.env` and fill your database info.
+   * Go to `frontend/` folder, copy `.env.example` to `.env` and set `VITE_API_URL=http://localhost:3000`.
+3. **Start the app:**
+   Open terminal at `G-Scores` root folder and run:
+   ```bash
+   docker compose up -d --build
+   ```
+4. **Open the app:**
+   * Go to your browser: `http://localhost:5173`
+5. **Stop the app:**
+   ```bash
+   docker compose down
+   ```
+### Option 2: Run Manually
 ### 1. Clone this project
 ```bash
 git clone https://github.com/Ginas559/G-Scores.git
