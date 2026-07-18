@@ -59,7 +59,31 @@ const top10GrA = [
 ];
 
 const getScore = (score) => {
-    return score == null ? "Không có điểm" : score;
+    return score == null ? text.noScore : score;
+};
+
+const text = {
+    title: "G-Scores",
+    searchPlaceholder: "Enter registration number",
+    searchButton: "Search",
+    studentInfo: "Thông tin thí sinh",
+    registrationNumber: "Số báo danh",
+    track: "Khối",
+    math: "Toán",
+    literature: "Ngữ văn",
+    foreignLanguage: "Ngoại ngữ",
+    physics: "Vật lý",
+    history: "Lịch sử",
+    chemistry: "Hóa học",
+    geography: "Địa lý",
+    biology: "Sinh học",
+    civicEducation: "GDCD",
+    scoreStatistics: "Score Statistics",
+    topA: "Top 10 Khối A",
+    natural: "Tự nhiên",
+    social: "Xã hội",
+    noData: "Không có",
+    noScore: "Không có điểm",
 };
 
 const HomePage = () => {
@@ -67,16 +91,11 @@ const HomePage = () => {
     const [student, setStudent] = useState(null);
     const [report, setReport] = useState(null);
     const [top10, setTop10] = useState([]);
-    const hasNatural =
+    const natural =
         student &&
         (student.vat_li != null ||
             student.hoa_hoc != null ||
             student.sinh_hoc != null);
-    const hasSocial =
-        student &&
-        (student.lich_su != null ||
-            student.dia_li != null ||
-            student.gdcd != null);
     const findStudent = () => {
         if (!/^\d{8}$/.test(sbd.trim())) {
             message.warning("Số báo danh phải gồm đúng 8 chữ số");
@@ -84,46 +103,38 @@ const HomePage = () => {
         }
         getStudentBySbd(sbd)
             .then((response) => {
-                console.log(response.data);
                 setStudent(response.data);
             })
             .catch((err) => {
-                console.log(err);
                 setStudent(null);
                 message.error("Không tìm thấy thí sinh");
             });
     };
-    const getReportData = () => {
+    const loadReportData = () => {
         getReport()
             .then((response) => {
-                console.log(response.data);
                 setReport(response.data);
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch(() => {});
     };
     const loadTop10 = () => {
         getTop10GroupA()
             .then((response) => {
-                console.log(response.data);
                 setTop10(response.data);
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch(() => {});
     };
     useEffect(() => {
-        getReportData();
+        loadReportData();
         loadTop10();
     }, []);
     return (
         <div style={{ padding: 24 }}>
-            <h1>G-Scores</h1>
+            <h1>{text.title}</h1>
             <Space>
                 <Input
                     style={{ width: 300 }}
-                    placeholder="Enter registration number"
+                    placeholder={text.searchPlaceholder}
                     value={sbd}
                     onChange={(e) => setSbd(e.target.value)}
                     onPressEnter={findStudent}
@@ -132,59 +143,47 @@ const HomePage = () => {
                     type="primary"
                     onClick={findStudent}
                 >
-                    Search
+                    {text.searchButton}
                 </Button>
             </Space>
             <div style={{ marginTop: 24 }}></div>
             {student && (
-                <Card title="Thông tin thí sinh">
+                <Card title={text.studentInfo}>
                     <Descriptions bordered column={2}>
-                        <Descriptions.Item label="Số báo danh">
+                        <Descriptions.Item label={text.registrationNumber}>
                             {student.sbd}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label="Khối">
-                            {hasNatural ? "Tự nhiên" : "Xã hội"}
+                        <Descriptions.Item label={text.track}>
+                            {natural ? text.natural : text.social}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label="Toán">
+                        <Descriptions.Item label={text.math}>
                             {getScore(student.toan)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item
-                            label={hasNatural ? "Vật lý" : "Lịch sử"}
-                        >
-                            {getScore(
-                                hasNatural ? student.vat_li : student.lich_su
-                            )}
+                        <Descriptions.Item label={natural ? "Vật lý" : "Lịch sử"}>
+                            {getScore(natural ? student.vat_li : student.lich_su)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label="Ngữ văn">
+                        <Descriptions.Item label={text.literature}>
                             {getScore(student.ngu_van)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item
-                            label={hasNatural ? "Hóa học" : "Địa lý"}
-                        >
-                            {getScore(
-                                hasNatural ? student.hoa_hoc : student.dia_li
-                            )}
+                        <Descriptions.Item label={natural ? "Hóa học" : "Địa lý"}>
+                            {getScore(natural ? student.hoa_hoc : student.dia_li)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item label="Ngoại ngữ">
+                        <Descriptions.Item label={text.foreignLanguage}>
                             {getScore(student.ngoai_ngu)}
                         </Descriptions.Item>
 
-                        <Descriptions.Item
-                            label={hasNatural ? "Sinh học" : "GDCD"}
-                        >
-                            {getScore(
-                                hasNatural ? student.sinh_hoc : student.gdcd
-                            )}
+                        <Descriptions.Item label={natural ? "Sinh học" : "GDCD"}>
+                            {getScore(natural ? student.sinh_hoc : student.gdcd)}
                         </Descriptions.Item>
 
                         <Descriptions.Item label="Mã ngoại ngữ" span={2}>
-                            {student.ma_ngoai_ngu ?? "Không có"}
+                            {student.ma_ngoai_ngu ?? text.noData}
                         </Descriptions.Item>
                     </Descriptions>
                 </Card>
@@ -193,12 +192,11 @@ const HomePage = () => {
             {
                 report && (
                     <div>
-                        <h2>Score Statistics</h2>
+                        <h2>{text.scoreStatistics}</h2>
                         {
                             <Row gutter={[16, 16]}>
                                 {
                                     Object.keys(report).map((subject) => {
-                                        console.log(report[subject]);
                                         const chartData = [
                                             {
                                                 level: "<4",
@@ -249,7 +247,7 @@ const HomePage = () => {
                             </Row>
                         }
                         <div style={{ marginTop: 24 }} />
-                        <Card title="Top 10 Khối A">
+                        <Card title={text.topA}>
                             <Table
                                 columns={top10GrA}
                                 dataSource={top10}
