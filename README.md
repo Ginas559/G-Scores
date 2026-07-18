@@ -115,7 +115,7 @@ DB_PORT=
 
 ---
 
-# ▶Run Project
+# Run Project
 
 Backend
 
