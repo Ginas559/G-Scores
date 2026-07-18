@@ -1,9 +1,23 @@
-import { useState } from "react";
-import { Input, Button } from "antd";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useEffect, useState } from "react";
+import { Input, Button, Card, Row, Col } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
+import { getReport } from "../api/reportApi";
 const HomePage = () => {
     const [sbd, setSbd] = useState("");
     const [student, setStudent] = useState(null);
+    const [report, setReport] = useState(null);
+    const subjectNames = {
+        toan: "Toán",
+        ngu_van: "Ngữ Văn",
+        ngoai_ngu: "Ngoại ngữ",
+        vat_li: "Vật lý",
+        hoa_hoc: "Hóa học",
+        sinh_hoc: "Sinh học",
+        lich_su: "Lịch sử",
+        dia_li: "Địa lý",
+        gdcd: "Giáo dục công dân"
+    };
     const findStudent = () => {
         getStudentBySbd(sbd)
             .then((response) => {
@@ -14,6 +28,19 @@ const HomePage = () => {
                 console.log(err);
             });
     };
+    const fetchReport = () => {
+        getReport()
+            .then((response) => {
+                console.log(response.data);
+                setReport(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    useEffect(() => {
+        fetchReport();
+    }, []);
     return (
         <div>
             <h1>G-Scores</h1>
@@ -30,17 +57,76 @@ const HomePage = () => {
             </Button>
             {student && (
                 <div>
-                    <p>Registration Number: {student.sbd}</p>
-                    <p>Math: {student.toan}</p>
-                    <p>Literature: {student.ngu_van}</p>
-                    <p>Foreign Language: {student.ngoai_ngu}</p>
-                    <p>Physics: {student.vat_li}</p>
-                    <p>Chemistry: {student.hoa_hoc}</p>
-                    <p>Biology: {student.sinh_hoc}</p>
-                    <p>History: {student.lich_su}</p>
-                    <p>Geography: {student.dia_li}</p>
-                    <p>Civic Education: {student.gdcd}</p>
-                    <p>Foreign Language Code: {student.ma_ngoai_ngu}</p>
+                    <p>Số báo danh: {student.sbd}</p>
+                    <p>Toán: {student.toan}</p>
+                    <p>Ngữ văn: {student.ngu_van}</p>
+                    <p>Ngoại ngữ: {student.ngoai_ngu}</p>
+                    <p>Vật lý: {student.vat_li}</p>
+                    <p>Hóa học: {student.hoa_hoc}</p>
+                    <p>Sinh học: {student.sinh_hoc}</p>
+                    <p>Lịch sử: {student.lich_su}</p>
+                    <p>Địa lý: {student.dia_li}</p>
+                    <p>Giáo dục công dân: {student.gdcd}</p>
+                    <p>Mã ngoại ngữ: {student.ma_ngoai_ngu}</p>
+                </div>
+            )}
+            {report && (
+                <div>
+                    <h2>Score Statistics</h2>
+                    {
+                        <Row gutter={[16, 16]}>
+                            {
+                                Object.keys(report).map((subject) => {
+                                    console.log(report[subject]);
+                                    const chartData = [
+                                        {
+                                            level: "<4",
+                                            count: report[subject]["<4"]
+                                        },
+                                        {
+                                            level: "4-6",
+                                            count: report[subject]["4-6"]
+                                        },
+                                        {
+                                            level: "6-8",
+                                            count: report[subject]["6-8"]
+                                        },
+                                        {
+                                            level: ">=8",
+                                            count: report[subject][">=8"]
+                                        }
+                                    ];
+                                    return (
+                                        <Col
+                                            key={subject}
+                                            span={8}
+                                        >
+                                            <Card
+                                                title={subjectNames[subject]}
+                                            >
+                                                <ResponsiveContainer
+                                                    width="100%"
+                                                    height={250}
+                                                >
+                                                    <BarChart
+                                                        data={chartData}
+                                                    >
+                                                        <XAxis dataKey="level" />
+                                                        <YAxis />
+                                                        <Tooltip />
+                                                        <Bar
+                                                            dataKey="count"
+                                                            fill="#1677ff"
+                                                        />
+                                                    </BarChart>
+                                                </ResponsiveContainer>
+                                            </Card>
+                                        </Col>
+                                    );
+                                })
+                            }
+                        </Row>
+                    }
                 </div>
             )}
         </div>
