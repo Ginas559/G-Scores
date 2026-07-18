@@ -67,9 +67,6 @@ const getTop10GroupA = (req, res) => {
         })
 
         .catch((err) => {
-
-            console.log(err);
-
             res.status(500).json({
 
                 message: "Internal server error.",

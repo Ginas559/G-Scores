@@ -1,88 +1,38 @@
 # G-Scores
+A full-stack web app to check Vietnam exam scores. Users can search by ID, see charts, and view the top 10 students of Group A.
 
-> A full-stack web application for looking up Vietnam National High School Exam scores by registration number, viewing score distribution statistics, and displaying the Top 10 students in Group A.
-
----
-
-# Live Demo
-
-## Frontend
-
-https://g-scores-tau.vercel.app/
-
+## Live Demo
+*   **Frontend:** https://g-scores-tau.vercel.app/
+*   **Backend API:** https://g-scores-9mfd.onrender.com
 ![alt text](docs/image.png)
-
 ![alt text](docs/image-1.png)
 
-## Backend API
+## What it can do (Features)
+### 1. Find Student Scores
+*   Search by student ID (SBD).
+*   Show all subject scores.
+*   Show 404 error if ID is wrong.
+### 2. Show Charts (Stats)
+*   Show score charts for all subjects.
+*   4 groups of scores: less than 4, 4-6, 6-8, and 8 or more.
+*   Use Recharts to make good bars.
+### 3. Top 10 Group A
+*   Rank top 10 students by Math, Physics, Chemistry total scores.
+### 4. Import Data
+*   Put data from a CSV file into MySQL database with one command:
+    ```bash
+    npm run import
+    ```
 
-https://g-scores-9mfd.onrender.com
+## Tech Stack
+### Frontend
+*   React, Vite, React Router DOM, Axios, Ant Design, Recharts.
+### Backend
+*   Node.js, Express.js, Sequelize ORM, csv-parser, dotenv.
+### Database
+*   MySQL.
 
----
-
-# Features
-
-### Student Score Lookup
-
-- Search candidate information by registration number
-- Display detailed subject scores
-- Handle candidate not found (404)
-
-### Score Statistics
-
-- Score distribution for every subject
-- Four score ranges:
-  - `<4`
-  - `4-6`
-  - `6-8`
-  - `>=8`
-- Interactive bar charts using Recharts
-
-### Top 10 Group A
-
-- Display Top 10 candidates ranked by:
-  - Mathematics
-  - Physics
-  - Chemistry
-  - Total score
-
-### CSV Import
-
-- Import exam data from CSV into MySQL using source code
-
-```bash
-npm run import
-```
-
----
-
-# Tech Stack
-
-## Frontend
-
-- React
-- Vite
-- React Router DOM
-- Axios
-- Ant Design
-- Recharts
-
-## Backend
-
-- Node.js
-- Express.js
-- Sequelize ORM
-- csv-parser
-- dotenv
-
-## Database
-
-- MySQL
-
----
-
-# Project Structure
-
+## Project Structure
 ```text
 g-scores
 │
@@ -110,228 +60,71 @@ g-scores
 └── README.md
 ```
 
----
+## What you need (Prerequisites)
+*   Node.js 18 or higher
+*   MySQL 8 or higher
+*   npm
 
-# Requirements
-
-- Node.js 18+
-- MySQL 8+
-- npm
-
----
-
-# Clone Project
-
+## How to Setup and Run
+### 1. Clone this project
 ```bash
 git clone https://github.com/Ginas559/G-Scores.git
-
 cd G-Scores
 ```
-
----
-
-# Installation
-
-## Backend
-
-```bash
-cd backend
-npm install
-```
-
-## Frontend
-
-```bash
-cd frontend
-npm install
-```
-
----
-
-# Environment Variables
-
-Create `.env` files from the provided `.env.example` files.
-
-## Backend
-
-Copy
-
-```text
-backend/.env.example
-```
-
-to
-
-```text
-backend/.env
-```
-
-Example
-
-```env
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=
-```
-
----
-
-## Frontend
-
-Copy
-
-```text
-frontend/.env.example
-```
-
-to
-
-```text
-frontend/.env
-```
-
-For local development
-
-```env
-VITE_API_URL=http://localhost:3000
-```
-
-When deploying the frontend (e.g. Vercel), configure the following environment variable:
-
-```text
-VITE_API_URL=https://g-scores-9mfd.onrender.com
-```
-
----
-
-# Run Project (Local)
-
-## Start Backend
-
-```bash
-cd backend
-npm run dev
-```
-
----
-
-## Import CSV Data
-
-```bash
-cd backend
-npm run import
-```
-
----
-
-## Start Frontend
-
-```bash
-cd frontend
-npm run dev
-```
-
----
-
-# Deployment
-
-## Frontend
-
-https://g-scores-tau.vercel.app/
-
-## Backend
-
-https://g-scores-9mfd.onrender.com
-
----
-
-# Quick API Test
-
-### Report
-
-```
-GET https://g-scores-9mfd.onrender.com/report
-```
-
-### Top 10 Group A
-
-```
-GET https://g-scores-9mfd.onrender.com/top10/group-a
-```
-
-### Student Lookup
-
-```
-GET https://g-scores-9mfd.onrender.com/students/01000001
-```
-
----
-
-# API
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| GET | `/students/:sbd` | Get candidate information by registration number |
-| GET | `/report` | Get score distribution statistics |
-| GET | `/top10/group-a` | Get Top 10 candidates in Group A |
-
----
-
-# Database
-
-## Table
-
-- `students`
-
----
-
-# Main Functional Flow
-
-```text
-User
-
-    │
-
-    ▼
-
-Enter Registration Number
-
-    │
-
-    ▼
-
-Search Candidate Information
-
-    │
-
-    ▼
-
-Display Subject Scores
-
-    │
-
-    ▼
-
-View Score Statistics
-
-    │
-
-    ▼
-
-View Top 10 Group A
-```
-
----
-
-# Notes
-
-- Environment variables are **not committed** to the repository.
-- Copy `.env.example` to `.env` before running the project locally.
-- When deploying the frontend, configure `VITE_API_URL` in your hosting platform (e.g. Vercel).
-- CSV data can be imported at any time by running:
-
-```bash
-npm run import
-```
+### 2. Install packages
+*   **Backend:**
+    ```bash
+    cd backend
+    npm install
+    ```
+*   **Frontend:**
+    ```bash
+    cd ../frontend
+    npm install
+    ```
+### 3. Setup Env Files
+You need to create `.env` files. Look at `.env.example` files to do it.
+*   **In `backend/` folder:**
+    Copy `.env.example` to `.env` and fill it:
+    ```env
+    DB_NAME=your_db_name
+    DB_USER=your_db_user
+    DB_PASSWORD=your_db_password
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    ```
+*   **In `frontend/` folder:**
+    Copy `.env.example` to `.env`.
+    *   For Local: `VITE_API_URL=http://localhost:3000`
+    *   For Production: `VITE_API_URL=https://g-scores-9mfd.onrender.com`
+### 4. Run App (Local)
+*   **Start Backend:**
+    ```bash
+    cd backend
+    npm run dev
+    ```
+*   **Import Data (Do this next):**
+    ```bash
+    cd backend
+    npm run import
+    ```
+*   **Start Frontend:**
+    ```bash
+    cd frontend
+    npm run dev
+    ```
+
+## API Endpoints
+### Quick Links to Test:
+*   **Get Stats:** `GET https://g-scores-9mfd.onrender.com/report`
+*   **Get Top 10:** `GET https://g-scores-9mfd.onrender.com/top10/group-a`
+*   **Get 1 Student:** `GET https://g-scores-9mfd.onrender.com/students/01000001`
+### Summary Table:
+| Method | URL | What it does |
+| :--- | :--- | :--- |
+| **GET** | `/students/:sbd` | Find a student by ID |
+| **GET** | `/report` | Get charts data |
+| **GET** | `/top10/group-a` | Get top 10 students |
+
+## Important Notes
+*   Always change `.env.example` to `.env` before you run the code.
