@@ -2,6 +2,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 import { useEffect, useState } from "react";
 import { Input, Button, Card, Row, Col, Table, Descriptions } from "antd";
 import { Space } from "antd";
+import { message } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
 import { getReport } from "../api/reportApi";
 import { getTop10GroupA } from "../api/top10Api";
@@ -90,6 +91,10 @@ const HomePage = () => {
             student.dia_li != null ||
             student.gdcd != null);
     const findStudent = () => {
+        if (!/^\d{8}$/.test(sbd.trim())) {
+            message.warning("Số báo danh phải gồm đúng 8 chữ số");
+            return;
+        }
         getStudentBySbd(sbd)
             .then((response) => {
                 console.log(response.data);
@@ -97,6 +102,8 @@ const HomePage = () => {
             })
             .catch((err) => {
                 console.log(err);
+                setStudent(null);
+                message.error("Không tìm thấy thí sinh");
             });
     };
     const fetchReport = () => {
