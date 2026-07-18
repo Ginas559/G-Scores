@@ -6,80 +6,67 @@ import { message } from "antd";
 import { getStudentBySbd } from "../api/studentApi";
 import { getReport } from "../api/reportApi";
 import { getTop10GroupA } from "../api/top10Api";
+
+const subjectName = {
+    toan: "Toán",
+    ngu_van: "Ngữ Văn",
+    ngoai_ngu: "Ngoại ngữ",
+    vat_li: "Vật lý",
+    hoa_hoc: "Hóa học",
+    sinh_hoc: "Sinh học",
+    lich_su: "Lịch sử",
+    dia_li: "Địa lý",
+    gdcd: "Giáo dục công dân",
+};
+
+const top10GrA = [
+    {
+        title: "Xếp hạng",
+        key: "rank",
+        render: (text, record, index) => index + 1,
+    },
+    {
+        title: "Số báo danh",
+        dataIndex: "sbd",
+        key: "sbd",
+        align: "center",
+    },
+    {
+        title: "Toán",
+        dataIndex: "toan",
+        key: "toan",
+        align: "center",
+    },
+    {
+        title: "Vật lý",
+        dataIndex: "vat_li",
+        key: "vat_li",
+        align: "center",
+    },
+    {
+        title: "Hóa học",
+        dataIndex: "hoa_hoc",
+        key: "hoa_hoc",
+        align: "center",
+    },
+    {
+        title: "Tổng điểm",
+        dataIndex: "tong_diem",
+        key: "tong_diem",
+        align: "center",
+        render: (value) => value.toFixed(2),
+    },
+];
+
+const getScore = (score) => {
+    return score == null ? "Không có điểm" : score;
+};
+
 const HomePage = () => {
     const [sbd, setSbd] = useState("");
     const [student, setStudent] = useState(null);
     const [report, setReport] = useState(null);
     const [top10, setTop10] = useState([]);
-    const subjectNames = {
-        toan: "Toán",
-        ngu_van: "Ngữ Văn",
-        ngoai_ngu: "Ngoại ngữ",
-        vat_li: "Vật lý",
-        hoa_hoc: "Hóa học",
-        sinh_hoc: "Sinh học",
-        lich_su: "Lịch sử",
-        dia_li: "Địa lý",
-        gdcd: "Giáo dục công dân"
-    };
-    const columns = [
-        {
-            title: "Xếp hạng",
-            key: "rank",
-            render: (text, record, index) => {
-                return index + 1;
-            }
-        },
-        {
-            title: "Số báo danh",
-            dataIndex: "sbd",
-            key: "sbd",
-            align: "center"
-        },
-        {
-            title: "Toán",
-            dataIndex: "toan",
-            key: "toan",
-            align: "center"
-        },
-        {
-            title: "Vật lý",
-            dataIndex: "vat_li",
-            key: "vat_li",
-            align: "center"
-        },
-        {
-            title: "Hóa học",
-            dataIndex: "hoa_hoc",
-            key: "hoa_hoc",
-            align: "center"
-        },
-        {
-            title: "Tổng điểm",
-            dataIndex: "tong_diem",
-            key: "tong_diem",
-            align: "center",
-            render: (value) => value.toFixed(2)
-        },
-    ];
-    const displayScore = (score) => {
-        return score == null ? "Không có điểm" : score;
-    };
-    const requiredSubjects = [
-        { label: "Toán", key: "toan" },
-        { label: "Ngữ văn", key: "ngu_van" },
-        { label: "Ngoại ngữ", key: "ngoai_ngu" }
-    ];
-    const naturalSubjects = [
-        { label: "Vật lý", key: "vat_li" },
-        { label: "Hóa học", key: "hoa_hoc" },
-        { label: "Sinh học", key: "sinh_hoc" }
-    ];
-    const socialSubjects = [
-        { label: "Lịch sử", key: "lich_su" },
-        { label: "Địa lý", key: "dia_li" },
-        { label: "Giáo dục công dân", key: "gdcd" }
-    ];
     const hasNatural =
         student &&
         (student.vat_li != null ||
@@ -106,7 +93,7 @@ const HomePage = () => {
                 message.error("Không tìm thấy thí sinh");
             });
     };
-    const fetchReport = () => {
+    const getReportData = () => {
         getReport()
             .then((response) => {
                 console.log(response.data);
@@ -116,7 +103,7 @@ const HomePage = () => {
                 console.log(err);
             });
     };
-    const fetchTop10 = () => {
+    const loadTop10 = () => {
         getTop10GroupA()
             .then((response) => {
                 console.log(response.data);
@@ -127,8 +114,8 @@ const HomePage = () => {
             });
     };
     useEffect(() => {
-        fetchReport();
-        fetchTop10();
+        getReportData();
+        loadTop10();
     }, []);
     return (
         <div style={{ padding: 24 }}>
@@ -161,37 +148,37 @@ const HomePage = () => {
                         </Descriptions.Item>
 
                         <Descriptions.Item label="Toán">
-                            {displayScore(student.toan)}
+                            {getScore(student.toan)}
                         </Descriptions.Item>
 
                         <Descriptions.Item
                             label={hasNatural ? "Vật lý" : "Lịch sử"}
                         >
-                            {displayScore(
+                            {getScore(
                                 hasNatural ? student.vat_li : student.lich_su
                             )}
                         </Descriptions.Item>
 
                         <Descriptions.Item label="Ngữ văn">
-                            {displayScore(student.ngu_van)}
+                            {getScore(student.ngu_van)}
                         </Descriptions.Item>
 
                         <Descriptions.Item
                             label={hasNatural ? "Hóa học" : "Địa lý"}
                         >
-                            {displayScore(
+                            {getScore(
                                 hasNatural ? student.hoa_hoc : student.dia_li
                             )}
                         </Descriptions.Item>
 
                         <Descriptions.Item label="Ngoại ngữ">
-                            {displayScore(student.ngoai_ngu)}
+                            {getScore(student.ngoai_ngu)}
                         </Descriptions.Item>
 
                         <Descriptions.Item
                             label={hasNatural ? "Sinh học" : "GDCD"}
                         >
-                            {displayScore(
+                            {getScore(
                                 hasNatural ? student.sinh_hoc : student.gdcd
                             )}
                         </Descriptions.Item>
@@ -236,7 +223,7 @@ const HomePage = () => {
                                                 span={8}
                                             >
                                                 <Card
-                                                    title={subjectNames[subject]}
+                                                    title={subjectName[subject]}
                                                 >
                                                     <ResponsiveContainer
                                                         width="100%"
@@ -264,7 +251,7 @@ const HomePage = () => {
                         <div style={{ marginTop: 24 }} />
                         <Card title="Top 10 Khối A">
                             <Table
-                                columns={columns}
+                                columns={top10GrA}
                                 dataSource={top10}
                                 rowKey="sbd"
                                 pagination={false}
