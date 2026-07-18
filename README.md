@@ -1,30 +1,58 @@
-# Tên dự án
+# G-Scores
 
-G-Scores
+> A full-stack web application for looking up Vietnam National High School Exam scores by registration number, viewing score distribution statistics, and displaying the Top 10 students in Group A.
 
-> Ứng dụng fullstack tra cứu điểm thi THPT theo số báo danh, thống kê phổ điểm theo từng môn và hiển thị top 10 thí sinh khối A.
+---
+
+# Live Demo
+
+## Frontend
+
+https://g-scores-tau.vercel.app/
+
+![alt text](docs/image.png)
+
+![alt text](docs/image-1.png)
+
+## Backend API
+
+https://g-scores-9mfd.onrender.com
 
 ---
 
 # Features
 
-### Student
+### Student Score Lookup
 
-- Tra cứu thông tin và điểm thí sinh theo SBD
-- Xử lý trường hợp không tìm thấy thí sinh (404)
+- Search candidate information by registration number
+- Display detailed subject scores
+- Handle candidate not found (404)
 
-### Report
+### Score Statistics
 
-- Thống kê phổ điểm theo 4 mức: `<4`, `4-6`, `6-8`, `>=8`
-- Hiển thị biểu đồ cột theo từng môn
+- Score distribution for every subject
+- Four score ranges:
+  - `<4`
+  - `4-6`
+  - `6-8`
+  - `>=8`
+- Interactive bar charts using Recharts
 
-### Ranking
+### Top 10 Group A
 
-- Top 10 thí sinh khối A theo tổng điểm Toán + Vật lý + Hóa học
+- Display Top 10 candidates ranked by:
+  - Mathematics
+  - Physics
+  - Chemistry
+  - Total score
 
-### Data Import
+### CSV Import
 
-- Import dữ liệu CSV vào MySQL bằng script code (`npm run import`)
+- Import exam data from CSV into MySQL using source code
+
+```bash
+npm run import
+```
 
 ---
 
@@ -43,7 +71,7 @@ G-Scores
 
 - Node.js
 - Express.js
-- Sequelize
+- Sequelize ORM
 - csv-parser
 - dotenv
 
@@ -65,7 +93,9 @@ g-scores
 │   │   ├── controllers
 │   │   ├── models
 │   │   ├── routes
-│   │   └── scripts
+│   │   ├── scripts
+│   │   └── validators
+│   ├── .env.example
 │   └── package.json
 │
 ├── frontend
@@ -74,6 +104,7 @@ g-scores
 │   │   ├── api
 │   │   ├── pages
 │   │   └── routes
+│   ├── .env.example
 │   └── package.json
 │
 └── README.md
@@ -81,18 +112,34 @@ g-scores
 
 ---
 
+# Requirements
+
+- Node.js 18+
+- MySQL 8+
+- npm
+
+---
+
+# Clone Project
+
+```bash
+git clone https://github.com/Ginas559/G-Scores.git
+
+cd G-Scores
+```
+
+---
+
 # Installation
 
-## Install dependencies
-
-Backend
+## Backend
 
 ```bash
 cd backend
 npm install
 ```
 
-Frontend
+## Frontend
 
 ```bash
 cd frontend
@@ -103,7 +150,23 @@ npm install
 
 # Environment Variables
 
-Backend (`backend/.env`)
+Create `.env` files from the provided `.env.example` files.
+
+## Backend
+
+Copy
+
+```text
+backend/.env.example
+```
+
+to
+
+```text
+backend/.env
+```
+
+Example
 
 ```env
 DB_NAME=
@@ -115,23 +178,55 @@ DB_PORT=
 
 ---
 
-# Run Project
+## Frontend
 
-Backend
+Copy
+
+```text
+frontend/.env.example
+```
+
+to
+
+```text
+frontend/.env
+```
+
+For local development
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+When deploying the frontend (e.g. Vercel), configure the following environment variable:
+
+```text
+VITE_API_URL=https://g-scores-9mfd.onrender.com
+```
+
+---
+
+# Run Project (Local)
+
+## Start Backend
 
 ```bash
 cd backend
 npm run dev
 ```
 
-Import CSV vào database
+---
+
+## Import CSV Data
 
 ```bash
 cd backend
 npm run import
 ```
 
-Frontend
+---
+
+## Start Frontend
 
 ```bash
 cd frontend
@@ -140,42 +235,103 @@ npm run dev
 
 ---
 
+# Deployment
+
+## Frontend
+
+https://g-scores-tau.vercel.app/
+
+## Backend
+
+https://g-scores-9mfd.onrender.com
+
+---
+
+# Quick API Test
+
+### Report
+
+```
+GET https://g-scores-9mfd.onrender.com/report
+```
+
+### Top 10 Group A
+
+```
+GET https://g-scores-9mfd.onrender.com/top10/group-a
+```
+
+### Student Lookup
+
+```
+GET https://g-scores-9mfd.onrender.com/students/01000001
+```
+
+---
+
 # API
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | /students/:sbd | Lấy thông tin thí sinh theo số báo danh |
-| GET | /report | Lấy dữ liệu thống kê phổ điểm theo môn |
-| GET | /top10/group-a | Lấy top 10 thí sinh khối A |
+| GET | `/students/:sbd` | Get candidate information by registration number |
+| GET | `/report` | Get score distribution statistics |
+| GET | `/top10/group-a` | Get Top 10 candidates in Group A |
 
 ---
 
 # Database
 
-Tables
+## Table
 
-- students
+- `students`
 
 ---
 
 # Main Functional Flow
 
+```text
 User
 
-Nhập SBD
+    │
 
-↓
+    ▼
 
-Tra cứu thông tin thí sinh
+Enter Registration Number
 
-↓
+    │
 
-Xem chi tiết điểm từng môn
+    ▼
 
-↓
+Search Candidate Information
 
-Xem phổ điểm theo môn
+    │
 
-↓
+    ▼
 
-Xem top 10 khối A
+Display Subject Scores
+
+    │
+
+    ▼
+
+View Score Statistics
+
+    │
+
+    ▼
+
+View Top 10 Group A
+```
+
+---
+
+# Notes
+
+- Environment variables are **not committed** to the repository.
+- Copy `.env.example` to `.env` before running the project locally.
+- When deploying the frontend, configure `VITE_API_URL` in your hosting platform (e.g. Vercel).
+- CSV data can be imported at any time by running:
+
+```bash
+npm run import
+```
